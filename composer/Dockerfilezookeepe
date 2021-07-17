@@ -1,0 +1,9 @@
+FROM quay.io/almalinux/almalinux
+
+WORKDIR /kafka
+RUN dnf install wget jre -y
+RUN wget https://downloads.apache.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+RUN tar -xzf kafka_2.13-2.8.0.tgz
+RUN rm  kafka_2.13-2.8.0.tgz
+#RUN cd kafka_2.13-2.8.0
+ENTRYPOINT cd kafka_2.13-2.8.0 && bin/zookeeper-server-start.sh config/zookeeper.properties 

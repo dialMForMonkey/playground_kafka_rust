@@ -1,0 +1,19 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  zookeeper:
+    build:
+        dockerfile: ./Dockerfilezookeepe
+    ports:
+        - "2181:2181"
+  kafka:
+    build:
+        dockerfile: ./Dockerfilekafk
+    links:
+        - zookeeper:zk
+    ports:
+        - "9092:9092"
+    environment:
+        KAFKA_ADVERTISED_HOST_NAME: $CF_HOST_IP
+        KAFKA_ZOOKEEPER_CONNECT: zk:2181
+    depends_on:
+        - zookeeper
