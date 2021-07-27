@@ -1,5 +1,5 @@
 mod kafka;
-use crate::kafka::client::get_client_config;
+use crate::kafka::client::default;
 use crate::kafka::topic::create_topic;
 use crate::kafka::message::{send,consumer};
 
@@ -14,7 +14,7 @@ async fn main() {
     let topic_name  = option_env!("TOPIC_NAME").unwrap();
     let host  = option_env!("HOST").unwrap();
     let group_id  = option_env!("GROUP_ID").unwrap();
-    let client = get_client_config(host, group_id);
+    let client = default(host, group_id);
 
     create_topic(&client, 4,topic_name).await;
 

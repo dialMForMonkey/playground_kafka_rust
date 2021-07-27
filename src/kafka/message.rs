@@ -4,23 +4,26 @@ use rdkafka::ClientConfig;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 use rdkafka::message::{OwnedHeaders};
 use std::time::Duration;
-
-use rdkafka::util::{     Timeout};
-
+use futures::{StreamExt, TryStream};
+use futures::stream::FuturesUnordered;
+use rdkafka::util::{ Timeout};
+use rdkafka::error::KafkaResult;
 
 
 pub  async fn consumer(topic_name: &str, client_config: &ClientConfig) {
 
-    let result_consumer =  StreamConsumer::from_config(client_config);
+    let result_consumer:KafkaResult<StreamConsumer> =  client_config.create();
+
     match result_consumer {
-        Ok(mut consumer)=> {
+        Ok(consumer)=> {
             consumer
                 .subscribe(&[topic_name])
-                .expect("erro no subscrive");
+                .expect("erro no subscribe");
 
             consumer.stream().map(|result_msg|{
-                println!("Only print message {:#?}", result_msg)
-            }).await;
+                println!("Only print message {:#?}", result_msg);
+                None
+            }).collect::<Vec<Option<i16>>>();
         },
         Err(d)=> {
             println!("Erro  client config {:#?}", d)

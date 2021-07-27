@@ -1,5 +1,6 @@
 pub use rdkafka::ClientConfig;
-use rdkafka::admin::{NewTopic, TopicReplication};
+use rdkafka::admin::{NewTopic, TopicReplication, AdminClient};
+use rdkafka::config::FromClientConfig;
 
 pub async fn create_topic(client_config :&ClientConfig, num_replication: i8, name: &str) -> Result<String, String>{
 
